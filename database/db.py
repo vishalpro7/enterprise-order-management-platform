@@ -1,14 +1,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker 
 from sqlalchemy.orm import declarative_base
+from urllib.parse import quote_plus
+
+password = quote_plus("Basuvi@200607")
 
 DATABASE_URL = (
-    "mssql+pyodbc://@"
-    "(localdb)\\MSSQLLocalDB/"
-    "EnterpriseOrderDB?"
-    "driver=ODBC+Driver+18+for+SQL+Server"
-    "&trusted_connection=yes"
+    f"postgresql+psycopg2://postgres:{password}@localhost:5432/EnterpriseOrderDB"
 )
+print(DATABASE_URL)
 
 engine = create_engine(
     DATABASE_URL,

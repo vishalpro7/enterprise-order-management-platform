@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from typing import List
+from fastapi import HTTPException
 
 from database.db import SessionLocal
 from models.user_model import User
@@ -48,3 +49,19 @@ def get_users(
     users = db.query(User).all()
 
     return users
+
+@router.get("/users/{user_id}", response_model = UserResponse)
+def get_user(
+    user_id : int, db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(
+        User.id == user_id
+    ).first()
+
+    if not user: 
+        raise HTTPException(
+            status_code = 404,
+            detail = "User Not Found!"
+        )
+
+    return user
