@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
+from typing import List
 
 from database.db import SessionLocal
 from models.user_model import User
@@ -35,3 +36,15 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     return new_user
+
+@router.get(
+    "/users",
+    response_model=List[UserResponse]
+)
+def get_users(
+    db: Session = Depends(get_db)
+):
+
+    users = db.query(User).all()
+
+    return users
