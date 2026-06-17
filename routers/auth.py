@@ -4,13 +4,17 @@ from sqlalchemy.orm import Session
 from typing import List
 from fastapi import HTTPException
 from auth.security import hash_password
+from fastapi.security import OAuth2PasswordRequestForm
+
 
 from database.db import SessionLocal
 from models.user_model import User
 from schemas.user_schema import UserCreate
 from schemas.user_schema import UserResponse
 from schemas.user_schema import (UserLogin, TokenResponse)
-from auth.security import (verify_password, create_access_token) 
+from auth.security import (verify_password, create_access_token)
+from services.auth_service import get_current_user
+ 
 
 router = APIRouter(
     prefix = "/auth",
@@ -73,27 +77,28 @@ def get_user(
     "/login",
     response_model = TokenResponse
 )
-def login_user(login_data : UserLogin, db: Session = Depends(get_db)):
-
+def login_user(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
     user = db.query(User).filter(
-        User.email == login_data.email
-    ).first()
-
-    if not user:
-        raise HTTPException(
-            status_code = 401,
-            detail = "Invalid Credentials!!"
-        )
+    User.email == form_data.username
+).first()
     
+    verify_password(
+        form_data.password,
+        user.password
+    )
+
     if not verify_password(
-        login_data.password,
+        form_data.password,
         user.password
     ):
         raise HTTPException(
             status_code = 401,
-            detail = "Invalid Password!"
+            details = "Invalid Credentials"
         )
-    
+
     token = create_access_token(
         {
             "sub" : user.email
@@ -101,9 +106,16 @@ def login_user(login_data : UserLogin, db: Session = Depends(get_db)):
     )
 
     return {
-        "access_token" : token,
-        "token_type" : "bearer"
-    }
+    "access_token": token,
+    "token_type": "bearer"
+}
 
 
-
+@router.get(
+    "/me",
+    response_model=UserResponse
+)
+def get_me(
+    current_user=Depends(get_current_user)
+):
+    return current_user
