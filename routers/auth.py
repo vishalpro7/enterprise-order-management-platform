@@ -15,7 +15,7 @@ from schemas.user_schema import (UserLogin, TokenResponse)
 from auth.security import (verify_password, create_access_token)
 from services.auth_service import get_current_user
 from dependencies.roles import require_role
- 
+from schemas.product_schema import (ProductResponse,ProductCreate)
 
 router = APIRouter(
     prefix = "/auth",
