@@ -14,6 +14,7 @@ from schemas.user_schema import UserResponse
 from schemas.user_schema import (UserLogin, TokenResponse)
 from auth.security import (verify_password, create_access_token)
 from services.auth_service import get_current_user
+from dependencies.roles import require_role
  
 
 router = APIRouter(
@@ -119,3 +120,13 @@ def get_me(
     current_user=Depends(get_current_user)
 ):
     return current_user
+
+@router.get("/admin")
+def admin_only_route(
+    current_user = Depends(require_role("Admin"))
+):
+    return {
+        "message" : "Welcome Admin!",
+        "user" : current_user.name
+    }
+
