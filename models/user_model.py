@@ -1,7 +1,7 @@
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
-
+from sqlalchemy.orm import relationship
 from database.db import Base
 
 
@@ -15,3 +15,10 @@ class User(Base):
     password = Column (String(255), nullable = False)
     role = Column (String(50), nullable = False)
     
+    orders = relationship(
+        "Order",
+        back_populates = "user"
+    )
+
+    
+

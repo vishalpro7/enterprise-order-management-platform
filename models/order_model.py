@@ -1,7 +1,7 @@
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import ForeignKey
-
+from sqlalchemy.orm import relationship
 from database.db import Base
 
 class Order(Base):
@@ -17,5 +17,16 @@ class Order(Base):
     
     total_amount = Column(Integer,
                           nullable = False)
+    
+    user = relationship(
+        "User",
+        back_populates = "orders"
+    )
+
+    order_items = relationship(
+        "OrderItem",
+        back_populates = "order"
+    )
+
     
     

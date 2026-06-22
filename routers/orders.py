@@ -3,6 +3,7 @@ from fastapi import Depends
 from fastapi import HTTPException
 
 from sqlalchemy.orm import Session
+from sqlalchemy.orm import relationship
 
 from database.db import SessionLocal
 
@@ -13,6 +14,7 @@ from models.product_model import Product
 from schemas.order_schema import OrderCreate
 from schemas.order_schema import OrderResponse
 from services.auth_service import get_current_user
+from typing import List
 
 
 
@@ -101,4 +103,18 @@ def create_order(
 
     return new_order
 
+
+@router.get("/{order_id}")
+def get_order(
+    order_id : int,
+    db : Session = Depends(get_db)
+):
+    order = db.query(Order).filter(
+        Order.id == order_id
+    ).first()
+
+    return {
+        "order_id" : order.id,
+        "items_count" : len(order.order_items)
+    }
 

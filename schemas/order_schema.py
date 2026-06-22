@@ -20,3 +20,13 @@ class OrderResponse(BaseModel):
 
     class Config :
         from_attributes = True
+
+
+class OrderSummary(BaseModel):
+
+    id : int
+    user_id : int
+    total_amount : int
+
+    class Config:
+        from_attributes = True

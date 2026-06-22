@@ -2,6 +2,7 @@ from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
 from database.db import Base
+from sqlalchemy.orm import relationship
 
 class Product(Base):
 
@@ -16,5 +17,10 @@ class Product(Base):
     price = Column(Integer, nullable = False)
 
     stock = Column(Integer, nullable = False)
+
+    order_items = relationship(
+        "OrderItem",
+        back_populates = "product"
+    )
 
     

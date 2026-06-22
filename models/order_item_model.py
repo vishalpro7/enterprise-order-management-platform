@@ -1,7 +1,7 @@
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import ForeignKey
-
+from sqlalchemy.orm import relationship
 from database.db import Base
 
 class OrderItem(Base):
@@ -27,6 +27,16 @@ class OrderItem(Base):
     quantity = Column(
         Integer,
         nullable = False
+    )
+
+    order = relationship(
+        "Order",
+        back_populates = "order_items"
+    )
+
+    product = relationship(
+        "Product",
+        back_populates = "order_items"
     )
 
     
