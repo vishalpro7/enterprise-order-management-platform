@@ -30,3 +30,22 @@ class OrderSummary(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class OrderItemResponse(BaseModel):
+
+    product_id : int
+    quantity : int
+
+    class Config:
+        from_attributes = True
+
+class OrderDetailResponse(BaseModel):
+
+    id : int
+    user_id : int
+    total_amount : int
+    order_items : List[OrderItemResponse]
+
+    class Config:
+        from_attributes = True 
