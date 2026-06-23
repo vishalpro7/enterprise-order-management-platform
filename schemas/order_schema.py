@@ -17,6 +17,7 @@ class OrderResponse(BaseModel):
     id : int
     user_id : int
     total_amount : int
+    status: str
 
     class Config :
         from_attributes = True
@@ -27,6 +28,7 @@ class OrderSummary(BaseModel):
     id : int
     user_id : int
     total_amount : int
+    status : str
 
     class Config:
         from_attributes = True
@@ -45,7 +47,14 @@ class OrderDetailResponse(BaseModel):
     id : int
     user_id : int
     total_amount : int
+    status : str
     order_items : List[OrderItemResponse]
+    
 
     class Config:
         from_attributes = True 
+
+
+class OrderStatusUpdate(BaseModel):
+
+    status : str

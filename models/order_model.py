@@ -1,6 +1,6 @@
 from sqlalchemy import Column
 from sqlalchemy import Integer
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import relationship
 from database.db import Base
 
@@ -17,6 +17,12 @@ class Order(Base):
     
     total_amount = Column(Integer,
                           nullable = False)
+    
+    status = Column(
+        String(50),
+        nullable = False, 
+        default = "PENDING"
+    )
     
     user = relationship(
         "User",
