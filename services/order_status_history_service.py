@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 from models.order_status_history_model import OrderStatusHistory
+from models.order_model import Order
 
 def create_status_history(
         db : Session, 
@@ -18,3 +20,30 @@ def create_status_history(
     db.add(history)
 
     return history
+
+def get_order_status_history(
+        db : Session, 
+        order_id : int
+):
+
+    order = (
+        db.query(Order)
+        .filter(Order.id == order_id)
+        .first()
+    )
+
+    if not order:
+        raise HTTPException(
+            status_code = 404, 
+            detail = "Order not found!"
+        )
+    
+    history = (
+        db.query(OrderStatusHistory)
+        .filter(OrderStatusHistory.order_id == order_id)
+        .order_by(OrderStatusHistory.changed_at)
+        .all()
+    )
+
+    return history
+
