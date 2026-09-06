@@ -54,10 +54,9 @@ class Order(Base):
         nullable = False 
     )
 
-    status_history = Column(
+    status_history = relationship(
         "OrderStatusHistory", 
         back_populates = "order"
     )
-    
     
     

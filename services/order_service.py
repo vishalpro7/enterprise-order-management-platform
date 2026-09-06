@@ -8,6 +8,7 @@ from models.shipment_model import Shipment
 
 from schemas.order_schema import OrderCreate, OrderStatusUpdate
 from services.product_service import get_product_by_id
+from services.order_status_history_service import create_status_history
 
 
 ALLOWED_STATUS = [
@@ -142,7 +143,8 @@ def get_order(
 def update_order_status(
         db : Session, 
         order_id : int, 
-        order_status : OrderStatusUpdate
+        order_status : OrderStatusUpdate, 
+        current_user
 ):
     
     order = get_order_by_id(
@@ -164,7 +166,9 @@ def update_order_status(
             detail = f"Cannot change order status from {order.status} to {order_status.status}"
         )
 
+    old_status = order.status
 
+    
     if order_status.status == "CANCELLED":
 
         order_items = (
@@ -190,8 +194,16 @@ def update_order_status(
 
         if shipment:
             shipment.status = "CANCELLED"
-    
+
     order.status = order_status.status
+
+    create_status_history(
+        db = db, 
+        order_id = order_id, 
+        old_status = old_status,
+        new_status = order.status, 
+        changed_by = current_user.id
+    )
 
     db.commit()
 

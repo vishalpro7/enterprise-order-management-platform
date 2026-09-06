@@ -95,7 +95,9 @@ def update_order_status(
 
     order_status : OrderStatusUpdate, 
 
-    db : Session = Depends(get_db)
+    db : Session = Depends(get_db), 
+
+    current_user = Depends(get_current_user)
 ):
     
     return order_service.update_order_status(
@@ -103,7 +105,9 @@ def update_order_status(
 
         order_id = order_id, 
 
-        order_status = order_status
+        order_status = order_status, 
+
+        current_user = current_user
     )
 
 
