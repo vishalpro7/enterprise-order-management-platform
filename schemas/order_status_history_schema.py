@@ -6,7 +6,7 @@ class OrderStatusHistoryResponse(BaseModel):
     order_id : int
     old_status : str
     new_status : str
-    changed_by : str
+    changed_by : int
     changed_at : datetime
 
 class Config:

@@ -23,7 +23,8 @@ def create_status_history(
 
 def get_order_status_history(
         db : Session, 
-        order_id : int
+        order_id : int, 
+        current_user
 ):
 
     order = (
